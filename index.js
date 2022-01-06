@@ -5,21 +5,19 @@ const WORKER = worker();
 
 const SCHEMA = {
     index: "string",
-    name: "string",
     date: "datetime",
 };
 
 let VIEW_CONFIG = {
-    row_pivots: ["index"],
+    row_pivots: [],
     column_pivots: [],
-    columns: ["name", "date", "hour_of_day"],
+    columns: ["date", "string_date"],
     filter: [],
     sort: [],
-    expressions: ['// hour_of_day \n hour_of_day("date")'],
+    expressions: ['// string_date \n string("date")'],
     aggregates: {
-        name: "any",
         date: "any",
-        hour_of_day: "any",
+        string_date: "any",
     },
 };
 
@@ -28,43 +26,43 @@ const LAYOUT = {
     ...VIEW_CONFIG,
 };
 
-const DATA = getData(SCHEMA, 20);
+const DATA = getData(SCHEMA, 1);
+let TABLE;
 
 async function load() {
-    const table = await loadTable();
-    await loadView(table);
-    await loadViewer(table);
+    await loadTable();
+    await loadView();
+    await loadViewer();
 }
 
 async function loadTable() {
-    const table = await WORKER.table(SCHEMA, { index: "index" });
-    await table.update(DATA);
-    return table;
+    TABLE = await WORKER.table(SCHEMA, { index: "index" });
+    await TABLE.update(DATA);
 }
 
-async function loadViewer(table) {
+async function loadViewer() {
     const el = document.querySelector("perspective-viewer");
-    el.load(table);
+    el.load(TABLE);
     el.restore(LAYOUT);
     el.toggleConfig();
     el.addEventListener("perspective-config-update", () =>
-        onConfigUpdate(el, table)
+        onConfigUpdate(el, TABLE)
     );
 }
 
-async function onConfigUpdate(el, table) {
+async function onConfigUpdate(el) {
     const NEW_LAYOUT = await el.save();
     VIEW_CONFIG = Object.entries(VIEW_CONFIG).reduce(
-        (acc, [key, value]) => {
+        (acc, [key]) => {
             return Object.assign(acc, { [key]: NEW_LAYOUT[key] });
         },
         {}
     );
-    await loadView(table);
+    await loadView();
 }
 
-async function loadView(table) {
-    const view = await table.view(VIEW_CONFIG);
+async function loadView() {
+    const view = await TABLE.view(VIEW_CONFIG);
     await loadViewConfig(view);
     await loadViewJsonData(view);
 }
@@ -82,3 +80,15 @@ async function loadViewConfig(view) {
 }
 
 window.addEventListener("DOMContentLoaded", load);
+
+const utcDateTimeEl = document.querySelector("#utc-time");
+const utcDateTimeValueEl = document.querySelector("#utc-time-value");
+
+utcDateTimeEl.addEventListener('change', async e => {
+    utcDateTimeValueEl.innerHTML = `TS: ${e.target.valueAsNumber}`;
+    await TABLE.update(DATA.map(item => ({
+        ...item,
+        date: e.target.valueAsNumber
+    })));
+    await loadView()
+})
