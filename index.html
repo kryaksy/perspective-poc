@@ -9,42 +9,30 @@
 
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"
-    />
-    <script src="https://cdn.jsdelivr.net/npm/webfontloader"></script>
-    <script
-      type="module"
-      src="https://unpkg.com/@finos/perspective/dist/cdn/perspective.js"
-    ></script>
-    <script
-      type="module"
-      src="https://unpkg.com/@finos/perspective-viewer/dist/cdn/perspective-viewer.js"
-    ></script>
-    <script
-      type="module"
-      src="https://unpkg.com/@finos/perspective-viewer-datagrid/dist/cdn/perspective-viewer-datagrid.js"
-    ></script>
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/@finos/perspective-viewer/dist/css/material-dense.dark.css"
-    />
 
-    <script type="module" src="./index.js"></script>
-    <link rel="stylesheet" href="./index.css" />
-  </head>
+<head>
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
+  <script src="https://cdn.jsdelivr.net/npm/webfontloader"></script>
+  <script type="module" src="https://unpkg.com/@finos/perspective/dist/cdn/perspective.js"></script>
+  <script type="module" src="https://unpkg.com/@finos/perspective-viewer/dist/cdn/perspective-viewer.js"></script>
+  <script type="module"
+    src="https://unpkg.com/@finos/perspective-viewer-datagrid/dist/cdn/perspective-viewer-datagrid.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/@finos/perspective-viewer/dist/css/material-dense.dark.css" />
 
-  <body>
-    <div class="toolbar">
-      <label for="utc-time">UTC Datetime</label>
-      <input type="datetime-local" name="" id="utc-time" />
-      <p id="utc-time-value"></p>
-    </div>
+  <script type="module" src="./index.js"></script>
+  <link rel="stylesheet" href="./index.css" />
+</head>
 
-    <perspective-viewer editable> </perspective-viewer>
-    <pre><code class="data json"></code></pre>
-    <pre><code class="config json"></code></pre>
-  </body>
+<body>
+  <div class="toolbar">
+    <label for="utc-time">UTC Datetime (Table will be updated as soon as value changes)</label>
+    <input type="datetime-local" id="utc-time" />
+  </div>
+
+  <perspective-viewer editable> </perspective-viewer>
+  <pre><code class="data json"></code></pre>
+  <pre><code class="config json"></code></pre>
+</body>
+
 </html>

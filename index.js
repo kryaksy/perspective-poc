@@ -82,10 +82,8 @@ async function loadViewConfig(view) {
 window.addEventListener("DOMContentLoaded", load);
 
 const utcDateTimeEl = document.querySelector("#utc-time");
-const utcDateTimeValueEl = document.querySelector("#utc-time-value");
 
 utcDateTimeEl.addEventListener('change', async e => {
-    utcDateTimeValueEl.innerHTML = `TS: ${e.target.valueAsNumber}`;
     await TABLE.update(DATA.map(item => ({
         ...item,
         date: e.target.valueAsNumber

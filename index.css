@@ -49,7 +49,3 @@ p {
   font-size: 11px;
   padding: 10px;
 }
-
-#utc-time {
-  filter: invert(1);
-}
