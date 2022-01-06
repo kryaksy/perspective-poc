@@ -12,14 +12,14 @@ const SCHEMA = {
 let VIEW_CONFIG = {
     row_pivots: ["index"],
     column_pivots: [],
-    columns: ["name", "date", "date_string"],
+    columns: ["name", "date", "hour_of_day"],
     filter: [],
     sort: [],
-    expressions: ['// date_string \n hour_of_day("date")'],
+    expressions: ['// hour_of_day \n hour_of_day("date")'],
     aggregates: {
         name: "any",
         date: "any",
-        date_string: "any",
+        hour_of_day: "any",
     },
 };
 
