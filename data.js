@@ -1,5 +1,5 @@
 
-import { getRandomDate, getRandomString } from "./random.js";
+import { getRandomDate, getRandomString, getRandomInteger } from "./random.js";
 
 const RANDOM_STRING_CHAR_COUNT = 1;
 
