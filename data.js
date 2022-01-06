@@ -17,7 +17,7 @@ function getValue(type) {
         case 'string':
             return getRandomString(RANDOM_STRING_CHAR_COUNT)
         case 'datetime':
-            return getRandomDate(RANDOM_DATE_START_DATE, RANDOM_DATE_END_DATE);
+            return 1641440390799;
         case 'boolean':
             return Math.random() > 0.4999;
     }

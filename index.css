@@ -1,6 +1,6 @@
 perspective-viewer {
   position: absolute;
-  top: 0;
+  top: 40px;
   left: 0;
   bottom: 0;
   width: 50%;
@@ -14,7 +14,7 @@ perspective-viewer {
 
   position: absolute;
   padding: 20px;
-  top: 0;
+  top: 40px;
   bottom: 0;
   width: 25%;
   overflow: overlay;
@@ -26,4 +26,30 @@ perspective-viewer {
 
 .config.json {
   right: 0;
+}
+
+.toolbar {
+  position: absolute;
+  background-color: #232323;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  box-sizing: border-box;
+  border-bottom: 1px solid #404040;
+}
+
+.toolbar label,
+p {
+  color: #dedede;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  padding: 10px;
+}
+
+#utc-time {
+  filter: invert(1);
 }
