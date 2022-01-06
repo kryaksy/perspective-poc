@@ -1,0 +1,29 @@
+perspective-viewer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 50%;
+}
+
+.json {
+  box-sizing: border-box;
+  background-color: #232323;
+  border-left: 1px solid #404040;
+  color: #dedede;
+
+  position: absolute;
+  padding: 20px;
+  top: 0;
+  bottom: 0;
+  width: 25%;
+  overflow: overlay;
+}
+
+.data.json {
+  right: 25%;
+}
+
+.config.json {
+  right: 0;
+}

@@ -1,0 +1,44 @@
+<!--
+   
+   Copyright (c) 2017, the Perspective Authors.
+   
+   This file is part of the Perspective library, distributed under the terms of
+   the Apache License 2.0.  The full license can be found in the LICENSE file.
+
+-->
+
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/webfontloader"></script>
+    <script
+      type="module"
+      src="https://unpkg.com/@finos/perspective/dist/cdn/perspective.js"
+    ></script>
+    <script
+      type="module"
+      src="https://unpkg.com/@finos/perspective-viewer/dist/cdn/perspective-viewer.js"
+    ></script>
+    <script
+      type="module"
+      src="https://unpkg.com/@finos/perspective-viewer-datagrid/dist/cdn/perspective-viewer-datagrid.js"
+    ></script>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/@finos/perspective-viewer/dist/css/material-dense.dark.css"
+    />
+
+    <script type="module" src="./index.js"></script>
+    <link rel="stylesheet" href="./index.css" />
+  </head>
+
+  <body>
+    <perspective-viewer editable> </perspective-viewer>
+    <pre><code class="data json"></code></pre>
+    <pre><code class="config json"></code></pre>
+  </body>
+</html>
