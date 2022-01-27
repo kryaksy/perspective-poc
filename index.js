@@ -4,6 +4,7 @@ import { getData } from "./data.js";
 const WORKER = worker();
 
 const SCHEMA = {
+    index: "string",
     string: "string",
     float: "float",
 };
