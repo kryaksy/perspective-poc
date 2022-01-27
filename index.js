@@ -4,24 +4,18 @@ import { getData } from "./data.js";
 const WORKER = worker();
 
 const SCHEMA = {
-    index: "string",
-    datetime: "datetime",
     string: "string",
-    integer: "integer",
     float: "float",
-    boolean: "boolean"
 };
 
 let VIEW_CONFIG = {
     row_pivots: [],
     column_pivots: [],
-    columns: ["index", "datetime", "string", "integer", "float", "boolean"],
+    columns: ["string", "float", "exp"],
     filter: [],
     sort: [],
-    expressions: [],
-    aggregates: {
-        datetime: "any"
-    },
+    expressions: [`// exp \n if (match("string", 'b')) {"float" * -1} else {"float"}`],
+    aggregates: {},
 };
 
 const LAYOUT = {
@@ -29,7 +23,7 @@ const LAYOUT = {
     ...VIEW_CONFIG,
 };
 
-const DATA = getData(SCHEMA, 10);
+const DATA = getData(SCHEMA, 20);
 let TABLE;
 
 async function load() {

@@ -9,12 +9,15 @@ const RANDOM_DATE_END_DATE = new Date();
 const RANDOM_INTEGER_MIN = 0;
 const RANDOM_INTEGER_MAX = 1000000;
 
+const RANDOM_FLOAT_MIN = 0;
+const RANDOM_FLOAT_MAX = 1;
+
 function getValue(type) {
     switch (type) {
         case 'integer':
             return getRandomInteger(RANDOM_INTEGER_MIN, RANDOM_INTEGER_MAX)
         case 'float':
-            return getRandomFloat(RANDOM_INTEGER_MIN, RANDOM_INTEGER_MAX)
+            return getRandomFloat(RANDOM_FLOAT_MIN, RANDOM_FLOAT_MAX)
         case 'string':
             return getRandomString(RANDOM_STRING_CHAR_COUNT)
         case 'datetime':
