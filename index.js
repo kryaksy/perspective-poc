@@ -9,13 +9,14 @@ const SCHEMA = {
     float: "float",
 };
 
+let MATCH_QUERY = 'B'
 let VIEW_CONFIG = {
     row_pivots: [],
     column_pivots: [],
     columns: ["string", "float", "exp"],
     filter: [],
     sort: [],
-    expressions: [`// exp \n if (match("string", 'B')) {"float" * -1} else {"float"}`],
+    expressions: [`// exp \n if (match("string", '${MATCH_QUERY}')) {"float" * -1} else {"float"}`],
     aggregates: {},
 };
 
@@ -93,7 +94,7 @@ async function loadView() {
 
 let ERROR_INDEX;
 function validateData(data) {
-    const index = data.findIndex(item => item.exp === null)
+    const index = data.findIndex(item => Math.abs(item.exp) !== Math.abs(item.float))
     ERROR_INDEX = index === -1 ? null : index
 }
 
@@ -177,7 +178,7 @@ function startPeriodic() {
     interval = setInterval(async () => {
         if (ERROR_INDEX !== null) {
             stopPeriodic();
-            errorEl.innerHTML = `exp column of Item[${ERROR_INDEX}] is null.`
+            errorEl.innerHTML = `exp column in Item[${ERROR_INDEX}] and the expression do not match.`
         } else {
             if (updateCheckbox.checked) await updateRows(1)
             if (insertCheckbox.checked) await insertRows(1)
