@@ -189,6 +189,8 @@ function startPeriodic() {
 startPeriodic()
 
 updatePeriodicButton.addEventListener('click', (e) => {
+    ERROR_INDEX = null;
+    errorEl.innerHTML = ''
     startPeriodic()
 })
 
