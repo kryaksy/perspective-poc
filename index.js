@@ -91,8 +91,15 @@ async function loadView() {
     await loadViewJsonData(view);
 }
 
+let ERROR_INDEX;
+function validateData(data) {
+    const index = data.findIndex(item => item.exp === null)
+    ERROR_INDEX = index === -1 ? null : index
+}
+
 async function loadViewJsonData(view) {
     const data = await view.to_json();
+    validateData(data)
     const el = document.querySelector(".data.json");
     el.innerHTML = JSON.stringify(data, null, 4);
 }
@@ -132,20 +139,20 @@ async function removeRows(count) {
     } else console.log('Delete empty');
 };
 
-const updateButton = document.querySelector("#update");
-updateButton.addEventListener('click', async e => {
-    await updateRows(5);
-})
+// const updateButton = document.querySelector("#update");
+// updateButton.addEventListener('click', async e => {
+//     await updateRows(5);
+// })
 
-const insertButton = document.querySelector("#insert");
-insertButton.addEventListener('click', async e => {
-    await insertRows(5);
-})
+// const insertButton = document.querySelector("#insert");
+// insertButton.addEventListener('click', async e => {
+//     await insertRows(5);
+// })
 
-const deleteButton = document.querySelector("#delete");
-deleteButton.addEventListener('click', async e => {
-    await removeRows(1);
-})
+// const deleteButton = document.querySelector("#delete");
+// deleteButton.addEventListener('click', async e => {
+//     await removeRows(1);
+// })
 
 const periodInput = document.querySelector("#period");
 periodInput.value = 1000;
@@ -154,21 +161,38 @@ periodInput.addEventListener('change', (e) => {
     PERIOD = e.target.value
 })
 
-const updatePeriodicButton = document.querySelector("#update-periodic");
 let interval;
+
+function stopPeriodic() {
+    clearInterval(interval)
+}
+
+const updatePeriodicButton = document.querySelector("#update-periodic");
 const updateCheckbox = document.querySelector(".update.checkbox");
 const insertCheckbox = document.querySelector(".insert.checkbox");
 const deleteCheckbox = document.querySelector(".delete.checkbox");
-updatePeriodicButton.addEventListener('click', (e) => {
-    clearInterval(interval)
+const errorEl = document.querySelector("#error");
+function startPeriodic() {
+    stopPeriodic();
     interval = setInterval(async () => {
-        if (updateCheckbox.checked) await updateRows(1)
-        if (insertCheckbox.checked) await insertRows(1)
-        if (deleteCheckbox.checked) await removeRows(1)
+        if (ERROR_INDEX !== null) {
+            stopPeriodic();
+            errorEl.innerHTML = `exp column of Item[${ERROR_INDEX}] is null.`
+        } else {
+            if (updateCheckbox.checked) await updateRows(1)
+            if (insertCheckbox.checked) await insertRows(1)
+            if (deleteCheckbox.checked) await removeRows(1)
+        }
     }, PERIOD)
+}
+
+startPeriodic()
+
+updatePeriodicButton.addEventListener('click', (e) => {
+    startPeriodic()
 })
 
 const stopPeriodicButton = document.querySelector("#stop-periodic");
 stopPeriodicButton.addEventListener('click', (e) => {
-    clearInterval(interval)
+    stopPeriodic()
 })
