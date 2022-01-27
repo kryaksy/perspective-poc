@@ -1,7 +1,7 @@
 
 import { getRandomDate, getRandomFloat, getRandomString, getRandomInteger } from "./random.js";
 
-const RANDOM_STRING_CHAR_COUNT = 5;
+const RANDOM_STRING_CHAR_COUNT = 2;
 
 const RANDOM_DATE_START_DATE = new Date(2000);
 const RANDOM_DATE_END_DATE = new Date();

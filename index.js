@@ -15,7 +15,7 @@ let VIEW_CONFIG = {
     columns: ["string", "float", "exp"],
     filter: [],
     sort: [],
-    expressions: [`// exp \n if (match("string", 'b')) {"float" * -1} else {"float"}`],
+    expressions: [`// exp \n if (match("string", 'B')) {"float" * -1} else {"float"}`],
     aggregates: {},
 };
 
@@ -24,7 +24,33 @@ const LAYOUT = {
     ...VIEW_CONFIG,
 };
 
-const DATA = getData(SCHEMA, 20);
+let indexes = [];
+
+function getSchemaData(count) {
+    const data = getData(SCHEMA, count);
+    data.forEach(item => indexes.push(item.index));
+    return data;
+}
+
+function getSchemaUpdateData(count) {
+    const data = getData(SCHEMA, count)
+    return data.filter(item => indexes.includes(item.index));
+}
+
+function getSchemaInsertData(count) {
+    const data = getData(SCHEMA, count)
+    const result = data.filter(item => !indexes.includes(item.index));
+    result.forEach(item => indexes.push(item.index));
+    return result;
+}
+
+function getSchemaDeleteData(count) {
+    const result = indexes.slice(0, count);
+    indexes.splice(0, count);
+    return result;
+}
+
+const DATA = getSchemaData(20);
 let TABLE;
 
 async function load() {
@@ -79,14 +105,21 @@ async function loadViewConfig(view) {
 
 window.addEventListener("DOMContentLoaded", load);
 
-const utcDateTimeEl = document.querySelector("#utc-time");
-const utcDateTimeValueEl = document.querySelector("#utc-time-value");
+const updateButton = document.querySelector("#update");
+updateButton.addEventListener('click', async e => {
+    const data = getSchemaUpdateData(5);
+    if (data.length) TABLE.update(data).catch(error => console.error('UPDATE', { error }));
+    else console.log('Update empty');
+})
 
-utcDateTimeEl.addEventListener('change', async e => {
-    utcDateTimeValueEl.innerHTML = `TS: ${e.target.valueAsNumber}`;
-    await TABLE.update(DATA.map(item => ({
-        ...item,
-        date: e.target.valueAsNumber
-    })));
-    await loadView()
+const insertButton = document.querySelector("#insert");
+insertButton.addEventListener('click', async e => {
+    const data = getSchemaInsertData(5);
+    if (data.length) TABLE.update(data).catch(error => console.error('INSERT', { error }));
+    else console.log('Insert empty');
+})
+
+const deleteButton = document.querySelector("#delete");
+deleteButton.addEventListener('click', async e => {
+    TABLE.remove(getSchemaDeleteData(2)).catch(error => console.error('DELETE', { error }));
 })
