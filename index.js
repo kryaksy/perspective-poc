@@ -5,19 +5,22 @@ const WORKER = worker();
 
 const SCHEMA = {
     index: "string",
-    date: "datetime",
+    datetime: "datetime",
+    string: "string",
+    integer: "integer",
+    float: "float",
+    boolean: "boolean"
 };
 
 let VIEW_CONFIG = {
     row_pivots: [],
     column_pivots: [],
-    columns: ["date", "string_date"],
+    columns: ["index", "datetime", "string", "integer", "float", "boolean"],
     filter: [],
     sort: [],
-    expressions: ['// string_date \n string("date")'],
+    expressions: [],
     aggregates: {
-        date: "any",
-        string_date: "any",
+        datetime: "any"
     },
 };
 
@@ -26,7 +29,7 @@ const LAYOUT = {
     ...VIEW_CONFIG,
 };
 
-const DATA = getData(SCHEMA, 1);
+const DATA = getData(SCHEMA, 10);
 let TABLE;
 
 async function load() {

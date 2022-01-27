@@ -1,7 +1,7 @@
 
-import { getRandomDate, getRandomString, getRandomInteger } from "./random.js";
+import { getRandomDate, getRandomFloat, getRandomString, getRandomInteger } from "./random.js";
 
-const RANDOM_STRING_CHAR_COUNT = 1;
+const RANDOM_STRING_CHAR_COUNT = 5;
 
 const RANDOM_DATE_START_DATE = new Date(2000);
 const RANDOM_DATE_END_DATE = new Date();
@@ -12,12 +12,13 @@ const RANDOM_INTEGER_MAX = 1000000;
 function getValue(type) {
     switch (type) {
         case 'integer':
-        case 'float':
             return getRandomInteger(RANDOM_INTEGER_MIN, RANDOM_INTEGER_MAX)
+        case 'float':
+            return getRandomFloat(RANDOM_INTEGER_MIN, RANDOM_INTEGER_MAX)
         case 'string':
             return getRandomString(RANDOM_STRING_CHAR_COUNT)
         case 'datetime':
-            return 1641440390799;
+            return getRandomDate(RANDOM_DATE_START_DATE, RANDOM_DATE_END_DATE);
         case 'boolean':
             return Math.random() > 0.4999;
     }
