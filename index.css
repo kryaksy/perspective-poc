@@ -49,6 +49,20 @@ p {
   padding: 10px;
 }
 
-#utc-time {
-  filter: invert(1);
+.toolbar {
+  color: white;
+}
+
+#period {
+  width: 100px;
+  margin-left: 20px;
+}
+
+#error {
+  color: red;
+  margin-left: 20px;
+}
+
+#update-periodic {
+  margin-left: 10px;
 }
