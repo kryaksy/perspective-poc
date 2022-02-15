@@ -95,7 +95,11 @@ async function loadView() {
 
 let ERROR_INDEX;
 function validateData(data) {
-    const index = data.findIndex(item => Math.abs(item.exp) !== Math.abs(item.float))
+    const index = data.findIndex(item => {
+        const matches = item.string.match(MATCH_QUERY);
+        const absEqual = Math.abs(item.exp) === Math.abs(item.float)
+        return matches && !absEqual;
+    })
     ERROR_INDEX = index === -1 ? null : index
 }
 
