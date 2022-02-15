@@ -11,8 +11,8 @@ const SCHEMA = {
 
 let MATCH_QUERY = 'B'
 let VIEW_CONFIG = {
-    row_pivots: [],
-    column_pivots: [],
+    group_by: [],
+    split_by: [],
     columns: ["string", "float", "exp"],
     filter: [],
     sort: [],
