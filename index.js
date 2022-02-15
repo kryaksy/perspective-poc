@@ -67,19 +67,26 @@ async function onConfigUpdate(el) {
 async function loadView() {
     const view = await TABLE.view(VIEW_CONFIG);
     await loadViewConfig(view);
-    await loadViewJsonData(view);
+    await loadViewToJsonData(view);
+    await loadViewToColumnsData(view);
 }
 
-async function loadViewJsonData(view) {
-    const data = await view.to_json();
-    const el = document.querySelector(".data.json");
-    el.innerHTML = JSON.stringify(data, null, 4);
+async function loadViewToJsonData(view) {
+    const to_json = await view.to_json();
+    const el = document.querySelector(".data.to_json");
+    el.innerHTML = JSON.stringify({ to_json }, null, 4);
+}
+
+async function loadViewToColumnsData(view) {
+    const to_columns = await view.to_columns();
+    const el = document.querySelector(".data.to_columns");
+    el.innerHTML = JSON.stringify({ to_columns }, null, 4);
 }
 
 async function loadViewConfig(view) {
-    const config = await view.get_config();
+    const get_config = await view.get_config();
     const el = document.querySelector(".config.json");
-    el.innerHTML = JSON.stringify(config, null, 4);
+    el.innerHTML = JSON.stringify({ get_config }, null, 4);
 }
 
 window.addEventListener("DOMContentLoaded", load);
