@@ -3,7 +3,7 @@ perspective-viewer {
   top: 40px;
   left: 0;
   bottom: 0;
-  width: 25%;
+  width: 34%;
 }
 
 .json {
@@ -15,16 +15,16 @@ perspective-viewer {
   padding: 20px;
   top: 40px;
   bottom: 0;
-  width: 25%;
+  width: 22%;
   overflow: overlay;
 }
 
 .data.to_json {
-  right: 50%;
+  right: 44%;
 }
 
 .data.to_columns {
-  right: 25%;
+  right: 22%;
 }
 
 .config.json {
