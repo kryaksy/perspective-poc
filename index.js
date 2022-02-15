@@ -13,8 +13,8 @@ const SCHEMA = {
 };
 
 let VIEW_CONFIG = {
-    row_pivots: [],
-    column_pivots: [],
+    group_by: [],
+    split_by: [],
     columns: ["index", "datetime", "string", "integer", "float", "boolean"],
     filter: [],
     sort: [],
