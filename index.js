@@ -139,21 +139,6 @@ async function removeRows(count) {
     } else console.log('Delete empty');
 };
 
-// const updateButton = document.querySelector("#update");
-// updateButton.addEventListener('click', async e => {
-//     await updateRows(5);
-// })
-
-// const insertButton = document.querySelector("#insert");
-// insertButton.addEventListener('click', async e => {
-//     await insertRows(5);
-// })
-
-// const deleteButton = document.querySelector("#delete");
-// deleteButton.addEventListener('click', async e => {
-//     await removeRows(1);
-// })
-
 const periodInput = document.querySelector("#period");
 periodInput.value = 1000;
 let PERIOD = periodInput.value
