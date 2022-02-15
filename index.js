@@ -88,8 +88,9 @@ async function onConfigUpdate(el) {
 
 async function loadView() {
     const view = await TABLE.view(VIEW_CONFIG);
+    await loadViewToJsonData(view);
+    await loadViewToColumnsData(view);
     await loadViewConfig(view);
-    await loadViewJsonData(view);
 }
 
 let ERROR_INDEX;
@@ -98,17 +99,23 @@ function validateData(data) {
     ERROR_INDEX = index === -1 ? null : index
 }
 
-async function loadViewJsonData(view) {
-    const data = await view.to_json();
-    validateData(data)
-    const el = document.querySelector(".data.json");
-    el.innerHTML = JSON.stringify(data, null, 4);
+const to_json_el = document.querySelector(".data.to_json");
+async function loadViewToJsonData(view) {
+    const to_json = await view.to_json();
+    validateData(to_json)
+    to_json_el.innerHTML = JSON.stringify({ to_json }, null, 4);
 }
 
+const to_columns_el = document.querySelector(".data.to_columns");
+async function loadViewToColumnsData(view) {
+    const to_columns = await view.to_columns();
+    to_columns_el.innerHTML = JSON.stringify({ to_columns }, null, 4);
+}
+
+const view_config_el = document.querySelector(".config.json");
 async function loadViewConfig(view) {
-    const config = await view.get_config();
-    const el = document.querySelector(".config.json");
-    el.innerHTML = JSON.stringify(config, null, 4);
+    const get_config = await view.get_config();
+    view_config_el.innerHTML = JSON.stringify({ get_config }, null, 4);
 }
 
 window.addEventListener("DOMContentLoaded", load);
@@ -164,6 +171,7 @@ function startPeriodic() {
         if (ERROR_INDEX !== null) {
             stopPeriodic();
             errorEl.innerHTML = `exp column in Item[${ERROR_INDEX}] and the expression do not match.`
+            to_json_el.style.color = 'red'
         } else {
             if (updateCheckbox.checked) await updateRows(1)
             if (insertCheckbox.checked) await insertRows(1)
@@ -177,6 +185,7 @@ startPeriodic()
 updatePeriodicButton.addEventListener('click', (e) => {
     ERROR_INDEX = null;
     errorEl.innerHTML = ''
+    to_json_el.style.color = '#dedede'
     startPeriodic()
 })
 
