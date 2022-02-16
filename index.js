@@ -11,9 +11,9 @@ const SCHEMA = {
 
 let MATCH_QUERY = 'B'
 let VIEW_CONFIG = {
-    group_by: [],
+    group_by: ["string"],
     split_by: [],
-    columns: ["string", "float", "exp"],
+    columns: ["float", "exp"],
     filter: [],
     sort: [],
     expressions: [`// exp \n if (match("string", '${MATCH_QUERY}')) {"float" * -1} else {"float"}`],
@@ -89,37 +89,31 @@ async function onConfigUpdate(el) {
 async function loadView() {
     const view = await TABLE.view(VIEW_CONFIG);
     await loadViewToJsonData(view);
-    await loadViewToColumnsData(view);
-    await loadViewConfig(view);
 }
 
-let ERROR_INDEX;
-function validateData(data) {
-    const index = data.findIndex(item => {
-        const matches = item.string.match(MATCH_QUERY);
-        const absEqual = Math.abs(item.exp) === Math.abs(item.float)
-        return matches && !absEqual;
-    })
-    ERROR_INDEX = index === -1 ? null : index
+let ERROR_INDEXES = [];
+function validateData() {
+    ERROR_INDEXES = [];
+    const rowEls = [...document.querySelectorAll('perspective-viewer tbody tr')];
+    const rows = rowEls
+        .map(row => {
+            const cells = [...row.querySelectorAll('th'), ...row.querySelectorAll('td')];
+            return cells.map(cell => cell.innerText).filter(cell => cell !== '')
+        })
+        .filter(([string]) => string !== 'TOTAL');
+    rows.forEach(([string, floatStr, expStr], index) => {
+        const float = Number(floatStr);
+        const exp = Number(expStr);
+        if (string.includes(MATCH_QUERY) ? float !== -1 * exp : float !== exp) {
+            ERROR_INDEXES.push(index + 1)
+        }
+    });
 }
 
 const to_json_el = document.querySelector(".data.to_json");
 async function loadViewToJsonData(view) {
     const to_json = await view.to_json();
-    validateData(to_json)
     to_json_el.innerHTML = JSON.stringify({ to_json }, null, 4);
-}
-
-const to_columns_el = document.querySelector(".data.to_columns");
-async function loadViewToColumnsData(view) {
-    const to_columns = await view.to_columns();
-    to_columns_el.innerHTML = JSON.stringify({ to_columns }, null, 4);
-}
-
-const view_config_el = document.querySelector(".config.json");
-async function loadViewConfig(view) {
-    const get_config = await view.get_config();
-    view_config_el.innerHTML = JSON.stringify({ get_config }, null, 4);
 }
 
 window.addEventListener("DOMContentLoaded", load);
@@ -127,7 +121,7 @@ window.addEventListener("DOMContentLoaded", load);
 async function updateRows(count) {
     const data = getSchemaUpdateData(count)
     if (data.length) {
-        await TABLE.update(data)
+        await TABLE?.update(data)
             .then(async () => loadView())
             .catch(error => console.error('UPDATE', { error }));
     } else console.log('Update empty');
@@ -136,7 +130,7 @@ async function updateRows(count) {
 async function insertRows(count) {
     const data = getSchemaInsertData(count);
     if (data.length) {
-        await TABLE.update(data)
+        await TABLE?.update(data)
             .then(async () => loadView())
             .catch(error => console.error('INSERT', { error }));
     } else console.log('Insert empty');
@@ -145,14 +139,14 @@ async function insertRows(count) {
 async function removeRows(count) {
     const data = getSchemaDeleteData(count);
     if (data.length) {
-        TABLE.remove(data)
+        TABLE?.remove(data)
             .then(async () => loadView())
             .catch(error => console.error('DELETE', { error }));
     } else console.log('Delete empty');
 };
 
 const periodInput = document.querySelector("#period");
-periodInput.value = 1000;
+periodInput.value = 500;
 let PERIOD = periodInput.value
 periodInput.addEventListener('change', (e) => {
     PERIOD = e.target.value
@@ -172,13 +166,18 @@ const errorEl = document.querySelector("#error");
 function startPeriodic() {
     stopPeriodic();
     interval = setInterval(async () => {
-        if (ERROR_INDEX !== null) {
+        validateData()
+        if (ERROR_INDEXES.length) {
             stopPeriodic();
-            errorEl.innerHTML = `exp column in Item[${ERROR_INDEX}] and the expression do not match.`
-            to_json_el.style.color = 'red'
+            errorEl.innerHTML = `exp column in ${ERROR_INDEXES.join(',')} and the expression do not match.`
+            ERROR_INDEXES.forEach(index => {
+                const row = document.querySelectorAll('perspective-viewer tbody tr')[index];
+                [...row.querySelectorAll('td')].forEach(cell => cell.style.background = 'darkred')
+            })
         } else {
+            document.querySelectorAll('perspective-viewer tbody tr')?.forEach(item => item.style.background = 'transparent')
             if (updateCheckbox.checked) await updateRows(1)
-            if (insertCheckbox.checked) await insertRows(1)
+            if (insertCheckbox.checked) await insertRows(2)
             if (deleteCheckbox.checked) await removeRows(1)
         }
     }, PERIOD)
@@ -187,9 +186,8 @@ function startPeriodic() {
 startPeriodic()
 
 updatePeriodicButton.addEventListener('click', (e) => {
-    ERROR_INDEX = null;
+    ERROR_INDEXES = [];
     errorEl.innerHTML = ''
-    to_json_el.style.color = '#dedede'
     startPeriodic()
 })
 
